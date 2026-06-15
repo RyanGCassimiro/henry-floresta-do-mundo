@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://c06rv6pwcxgo7" path="res://sprites/1 - Penguin/Jump (16 x 16).png" id="3_rfe5m"]
 [ext_resource type="Texture2D" uid="uid://cqe3yd64pc2wn" path="res://sprites/1 - Penguin/Lying_On_Ground (16 x 16).png" id="3_tjdhl"]
 [ext_resource type="Texture2D" uid="uid://qr58xyj7qq57" path="res://sprites/1 - Penguin/Belly_Sliding (16 x 16).png" id="6_6nm46"]
+[ext_resource type="Texture2D" uid="uid://b7lnw2w6cl605" path="res://sprites/1 - Penguin/Swimming (16 x 16).png" id="9_x08pd"]
+[ext_resource type="Texture2D" uid="uid://wiicvfjondf6" path="res://sprites/1 - Penguin/Wall_Slide (16x16).png" id="10_tjdhl"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rfe5m"]
 atlas = ExtResource("2_b0kkn")
@@ -46,6 +48,22 @@ region = Rect2(16, 0, 16, 16)
 atlas = ExtResource("6_6nm46")
 region = Rect2(32, 0, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_hj0ki"]
+atlas = ExtResource("9_x08pd")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fruft"]
+atlas = ExtResource("9_x08pd")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slxql"]
+atlas = ExtResource("9_x08pd")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_evlff"]
+atlas = ExtResource("9_x08pd")
+region = Rect2(48, 0, 16, 16)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_ef06p"]
 atlas = ExtResource("3_e4p34")
 region = Rect2(0, 0, 16, 16)
@@ -69,6 +87,22 @@ region = Rect2(64, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_q0i8f"]
 atlas = ExtResource("3_e4p34")
 region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cgp7q"]
+atlas = ExtResource("10_tjdhl")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1n8aq"]
+atlas = ExtResource("10_tjdhl")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_28s6d"]
+atlas = ExtResource("10_tjdhl")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cicqb"]
+atlas = ExtResource("10_tjdhl")
+region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ef06p"]
 animations = [{
@@ -143,6 +177,29 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_hj0ki")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fruft")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slxql")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_evlff")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slxql")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fruft")
+}],
+"loop": true,
+"name": &"swimming",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_ef06p")
 }, {
 "duration": 1.0,
@@ -163,6 +220,23 @@ animations = [{
 "loop": true,
 "name": &"walk",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cgp7q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1n8aq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_28s6d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cicqb")
+}],
+"loop": true,
+"name": &"wall",
+"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_e4p34"]
@@ -180,15 +254,18 @@ script = ExtResource("1_merdl")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1967922023]
 z_index = 1
 sprite_frames = SubResource("SpriteFrames_ef06p")
-animation = &"hurt"
+animation = &"idle"
+frame_progress = 0.47806188
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1602365101]
+visible = false
 z_index = 2
 shape = SubResource("CapsuleShape2D_e4p34")
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=748459071]
+visible = false
 collision_layer = 2
-collision_mask = 4
+collision_mask = 52
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1999346379]
 shape = SubResource("RectangleShape2D_6nm46")
@@ -197,5 +274,17 @@ debug_color = Color(0.94948167, 4.5242905e-06, 0.57565546, 0.41960785)
 [node name="ReloadTimer" type="Timer" parent="." unique_id=1812640523]
 one_shot = true
 
+[node name="LeftWallDetector" type="RayCast2D" parent="." unique_id=383342776]
+visible = false
+z_index = 1
+target_position = Vector2(-8, 0)
+
+[node name="RightWallDetector" type="RayCast2D" parent="." unique_id=2091820022]
+visible = false
+z_index = 1
+target_position = Vector2(8, 0)
+
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="body_exited" from="Hitbox" to="." method="_on_hitbox_body_exited"]
 [connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

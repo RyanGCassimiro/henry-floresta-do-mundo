@@ -161,16 +161,16 @@ collision_layer = 4
 script = ExtResource("1_yag7t")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=909192796]
+position = Vector2(0, 0.1)
 sprite_frames = SubResource("SpriteFrames_yag7t")
-animation = &"attack"
-frame = 2
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=115480195]
 visible = false
 position = Vector2(2, 2)
 shape = SubResource("CapsuleShape2D_fpmxe")
 
-[node name="Hitbox" type="Area2D" parent="." unique_id=479930622]
+[node name="Hitbox" type="Area2D" parent="." unique_id=479930622 groups=["Enemies"]]
 visible = false
 collision_layer = 4
 collision_mask = 2
@@ -194,6 +194,6 @@ target_position = Vector2(59, 0)
 collision_mask = 2
 
 [node name="BoneStartPosition" type="Node2D" parent="." unique_id=28277844]
-position = Vector2(13, 0)
+position = Vector2(13, -3)
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
