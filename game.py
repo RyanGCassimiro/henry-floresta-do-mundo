@@ -1,6 +1,5 @@
-"""Integração geral
-
-Este arquivo orquestra as partes dos três membros:
+"""
+Junção daas partes dos três membros:
 - Wanessa: TSP, mapa e missão.
 - Ryan: locais, coleta, MergeSort, loja, combate e progressão.
 - Santiago: inventário, interface textual e salvamento.
@@ -54,7 +53,6 @@ def titulo() -> None:
     a missão principal e prepara o uso do mapa/TSP dentro da narrativa.
     """
 
-
 def menu() -> None:
     print("\n=== MENU PRINCIPAL ===")
     print("1  - Ver missão")
@@ -79,7 +77,6 @@ def menu() -> None:
     print("20 - Conversar com NPCs do local")
     print("21 - Créditos")
     print("0  - Sair")
-
 
 def escolher_local(estado: dict) -> None:
     locais = listar_locais()
@@ -111,7 +108,6 @@ def escolher_local(estado: dict) -> None:
     estado["local_atual"] = destino
     print(f"\nHenry e Mitis viajaram de {origem} para {destino}.")
     print(f"Distância percorrida: {distancia}")
-
 
 def ordenar_inventario(estado: dict) -> None:
     if not estado["inventario"]:
@@ -224,7 +220,6 @@ def calcular_rota_tsp() -> None:
     print("\n=== ROTA ÓTIMA DA MISSÃO ===")
     print(" -> ".join(rota))
     print(f"Distância total: {distancia}")
-
 
 def iniciar_jogo() -> None:
     estado = criar_estado_inicial()
