@@ -1,10 +1,21 @@
+# Python
 __pycache__/
 *.pyc
 .pytest_cache/
-.venv/
+
+# Ambientes virtuais
 venv/
-.env
-.DS_Store
+.venv/
+
+# VS Code
 .vscode/
+
+# Arquivos de ambiente
+.env
+
+# Sistema operacional
+.DS_Store
+
+# Saves e dados locais
 saves/
 *.save
