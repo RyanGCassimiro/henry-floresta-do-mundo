@@ -1,6 +1,5 @@
-"""Integração geral
-
-Este arquivo orquestra as partes dos três membros:
+"""
+Junção daas partes dos três membros:
 - Wanessa: TSP, mapa e missão.
 - Ryan: locais, coleta, MergeSort, loja, combate e progressão.
 - Santiago: inventário, interface textual e salvamento.
@@ -34,7 +33,6 @@ from membro3_inventario.save_manager import carregar_jogo, salvar_jogo
 def pausar() -> None:
     input("\nPressione ENTER para continuar...")
 
-
 def titulo() -> None:
     print("=" * 60)
     print("HENRY E A FLORESTA DO MUNDO - AVENTURA PELO TERMINAL")
@@ -42,7 +40,6 @@ def titulo() -> None:
     print("Henry viaja pelo mundo com Mitis, o corujinha-buraqueira.")
     print("A Árvore do Mundo perdeu fragmentos de seiva mágica.")
     print("Use rotas, itens, habilidades e estratégia para restaurar a floresta.")
-
 
 def menu() -> None:
     print("\n=== MENU PRINCIPAL ===")
@@ -66,7 +63,6 @@ def menu() -> None:
     print("18 - Quests dos aliados")
     print("19 - Entrar na Floresta Distorcida")
     print("0  - Sair")
-
 
 def escolher_local(estado: dict) -> None:
     locais = listar_locais()
@@ -99,7 +95,6 @@ def escolher_local(estado: dict) -> None:
     print(f"\nHenry e Mitis viajaram de {origem} para {destino}.")
     print(f"Distância percorrida: {distancia}")
 
-
 def ordenar_inventario(estado: dict) -> None:
     if not estado["inventario"]:
         print("O inventário está vazio.")
@@ -128,7 +123,6 @@ def ordenar_inventario(estado: dict) -> None:
     print(f"Inventário ordenado por {chave} usando MergeSort.")
     mostrar_inventario(estado)
 
-
 def calcular_rota_tsp() -> None:
     inicio = MISSAO_PRINCIPAL["local_inicial"]
     obrigatorios = MISSAO_PRINCIPAL["locais_obrigatorios"]
@@ -136,7 +130,6 @@ def calcular_rota_tsp() -> None:
     print("\n=== ROTA ÓTIMA DA MISSÃO ===")
     print(" -> ".join(rota))
     print(f"Distância total: {distancia}")
-
 
 def iniciar_jogo() -> None:
     estado = criar_estado_inicial()

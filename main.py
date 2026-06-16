@@ -1,6 +1,6 @@
-"""Ponto de entrada do RPG de terminal.
+"""Ponto de entrada.
 
-Execute com:
+Comando:
     python main.py
 """
 import sys

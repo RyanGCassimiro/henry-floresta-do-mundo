@@ -2,7 +2,7 @@
 
 RPG de mesa textual em terminal feito para a atividade **Modelagem de Dados e Laboratório de Análise de Algorítmo**.
 
-Henry viaja pelo mundo com **Mitis**, para recuperar fragmentos mágicos da Árvore do Mundo.
+Henry viaja com Mitis para recuperar fragmentos mágicos da Árvore do Mundo.
 
 ## Como rodar
 
@@ -33,7 +33,7 @@ Não precisa instalar bibliotecas externas.
 
 ### Henry
 
-Henry é o protagonista. No MVP, ele possui cinco famílias de magias ofensivas:
+Henry, nosso protagonista, é um gato preto. No MVP, ele possui cinco famílias de magias ofensivas:
 
 - **Fogo:** Fire → Fira → Firaga → Firaja.
 - **Gelo:** Blizzard → Blizzara → Blizzaga → Blizzaja.
