@@ -9,6 +9,8 @@ from __future__ import annotations
 from membro1_tsp.mapa import MAPA_DISTANCIAS, listar_locais, mostrar_mapa
 from membro1_tsp.quest import MISSAO_PRINCIPAL, mostrar_missao
 from membro1_tsp.tsp import calcular_melhor_rota
+from membro1_tsp.tela_inicial import mostrar_tela_inicial, menu_tela_inicial
+from membro1_tsp.creditos import mostrar_creditos
 
 from membro2_mundo.coleta import coletar_item_no_local
 from membro2_mundo.combate import iniciar_combate_no_local
@@ -16,30 +18,40 @@ from membro2_mundo.loja_capivara import abrir_loja_capivara
 from membro2_mundo.floresta_distorcida import explorar_floresta_distorcida, garantir_estado_dungeon
 from membro2_mundo.progressao import mostrar_status, gastar_ponto_habilidade, garantir_estado_magias
 from membro2_mundo.quests_personagens import abrir_quests_personagens, garantir_estado_quests
+from membro2_mundo.dialogos_npcs import abrir_dialogos_local
 from membro2_mundo.sorting import merge_sort_itens
 from membro2_mundo.dados import aplicar_teste_mobilidade
+
 
 from membro3_inventario.inventory import (
     criar_estado_inicial,
     consultar_item,
-    equipar_item,
+    consultar_item_por_indice,
+    equipar_item_por_indice,
     remover_item,
     usar_consumivel,
+    usar_consumivel_por_indice,
 )
-from membro3_inventario.inventario_ui import mostrar_inventario, mostrar_equipamentos
-from membro3_inventario.save_manager import carregar_jogo, salvar_jogo
+from membro3_inventario.inventario_ui import (
+    mostrar_inventario,
+    mostrar_equipamentos,
+    mostrar_equipamentos_disponiveis,
+    mostrar_itens_para_consulta,
+    mostrar_detalhes_item,
+    mostrar_consumiveis_disponiveis,
+)
+from membro3_inventario.save_manager import salvar_jogo, carregar_jogo
 
 
 def pausar() -> None:
     input("\nPressione ENTER para continuar...")
 
 def titulo() -> None:
-    print("=" * 60)
-    print("HENRY E A FLORESTA DO MUNDO - AVENTURA PELO TERMINAL")
-    print("=" * 60)
-    print("Henry viaja pelo mundo com Mitis, o corujinha-buraqueira.")
-    print("A Árvore do Mundo perdeu fragmentos de seiva mágica.")
-    print("Use rotas, itens, habilidades e estratégia para restaurar a floresta.")
+    """Exibe a tela inicial do jogo.
+
+    A tela inicial fica como atribuição do Membro 1, pois apresenta
+    a missão principal e prepara o uso do mapa/TSP dentro da narrativa.
+    """
 
 def menu() -> None:
     print("\n=== MENU PRINCIPAL ===")
@@ -52,16 +64,18 @@ def menu() -> None:
     print("7  - Loja da Capivara")
     print("8  - Ver inventário")
     print("9  - Ordenar inventário com MergeSort")
-    print("10 - Consultar item")
-    print("11 - Usar poção/consumível")
+    print("10 - Consultar item por número")
+    print("11 - Usar poção/consumível por número")
     print("12 - Equipar item")
     print("13 - Remover item")
     print("14 - Ver status e habilidades")
-    print("15 - Gastar ponto de habilidade")
+    print("15 - Treinar habilidade / ver evolução")
     print("16 - Salvar jogo")
     print("17 - Carregar jogo")
     print("18 - Quests dos aliados")
     print("19 - Entrar na Floresta Distorcida")
+    print("20 - Conversar com NPCs do local")
+    print("21 - Créditos")
     print("0  - Sair")
 
 def escolher_local(estado: dict) -> None:
@@ -123,6 +137,82 @@ def ordenar_inventario(estado: dict) -> None:
     print(f"Inventário ordenado por {chave} usando MergeSort.")
     mostrar_inventario(estado)
 
+def equipar_item_por_menu(estado: dict) -> None:
+    """Permite equipar usando número, sem digitar nome exato do item."""
+    equipamentos = mostrar_equipamentos_disponiveis(estado)
+    if not equipamentos:
+        return
+
+    try:
+        escolha = int(input("Escolha o número do equipamento, ou 0 para cancelar: ").strip())
+    except ValueError:
+        print("Opção inválida. Digite apenas o número do equipamento.")
+        return
+
+    if escolha == 0:
+        print("Equipamento cancelado.")
+        return
+
+    if not 1 <= escolha <= len(equipamentos):
+        print("Opção inválida.")
+        return
+
+    indice_real, _ = equipamentos[escolha - 1]
+    equipar_item_por_indice(estado, indice_real)
+
+
+def consultar_item_por_menu(estado: dict) -> None:
+    """Consulta item por número para evitar digitar nome exato."""
+    itens = mostrar_itens_para_consulta(estado)
+    if not itens:
+        return
+
+    try:
+        escolha = int(input("Escolha o número do item, ou 0 para cancelar: ").strip())
+    except ValueError:
+        print("Opção inválida. Digite apenas o número do item.")
+        return
+
+    if escolha == 0:
+        print("Consulta cancelada.")
+        return
+
+    if not 1 <= escolha <= len(itens):
+        print("Opção inválida.")
+        return
+
+    indice_real, _ = itens[escolha - 1]
+    item = consultar_item_por_indice(estado, indice_real)
+    if item:
+        mostrar_detalhes_item(item)
+    else:
+        print("Item não encontrado.")
+
+
+def usar_consumivel_por_menu(estado: dict) -> None:
+    """Usa poção/consumível por número."""
+    consumiveis = mostrar_consumiveis_disponiveis(estado)
+    if not consumiveis:
+        return
+
+    try:
+        escolha = int(input("Escolha o número do consumível, ou 0 para cancelar: ").strip())
+    except ValueError:
+        print("Opção inválida. Digite apenas o número do consumível.")
+        return
+
+    if escolha == 0:
+        print("Uso de consumível cancelado.")
+        return
+
+    if not 1 <= escolha <= len(consumiveis):
+        print("Opção inválida.")
+        return
+
+    indice_real, _ = consumiveis[escolha - 1]
+    usar_consumivel_por_indice(estado, indice_real)
+
+
 def calcular_rota_tsp() -> None:
     inicio = MISSAO_PRINCIPAL["local_inicial"]
     obrigatorios = MISSAO_PRINCIPAL["locais_obrigatorios"]
@@ -133,6 +223,28 @@ def calcular_rota_tsp() -> None:
 
 def iniciar_jogo() -> None:
     estado = criar_estado_inicial()
+    # MENU_INICIAL_MEMBRO1
+    while True:
+        escolha_inicial = menu_tela_inicial()
+        if escolha_inicial == "1":
+            break
+        if escolha_inicial == "2":
+            try:
+                estado_carregado = carregar_jogo()
+                if estado_carregado:
+                    print("\nJogo carregado com sucesso!")
+                    estado = estado_carregado
+                    break
+                print("\nNenhum jogo salvo encontrado. Iniciando novo jogo.")
+                break
+            except Exception as erro:
+                print(f"\nNão foi possível carregar o jogo: {erro}")
+                input("Pressione ENTER para voltar à tela inicial...")
+        elif escolha_inicial == "3":
+            mostrar_creditos()
+        elif escolha_inicial == "0":
+            print("\nAté a próxima aventura!")
+            return
     garantir_estado_magias(estado)
     garantir_estado_quests(estado)
     garantir_estado_dungeon(estado)
@@ -172,20 +284,13 @@ def iniciar_jogo() -> None:
             ordenar_inventario(estado)
             pausar()
         elif opcao == "10":
-            nome = input("Nome do item para consultar: ")
-            item = consultar_item(estado, nome)
-            if item:
-                print(item)
-            else:
-                print("Item não encontrado.")
+            consultar_item_por_menu(estado)
             pausar()
         elif opcao == "11":
-            nome = input("Nome do consumível para usar: ")
-            usar_consumivel(estado, nome)
+            usar_consumivel_por_menu(estado)
             pausar()
         elif opcao == "12":
-            nome = input("Nome do equipamento para equipar: ")
-            equipar_item(estado, nome)
+            equipar_item_por_menu(estado)
             pausar()
         elif opcao == "13":
             nome = input("Nome do item para remover: ")
@@ -214,6 +319,12 @@ def iniciar_jogo() -> None:
             pausar()
         elif opcao == "19":
             explorar_floresta_distorcida(estado)
+            pausar()
+        elif opcao == "20":
+            abrir_dialogos_local(estado)
+            pausar()
+        elif opcao == "21":
+            mostrar_creditos()
             pausar()
         elif opcao == "0":
             print("Até a próxima aventura de Henry e Mitis!")
