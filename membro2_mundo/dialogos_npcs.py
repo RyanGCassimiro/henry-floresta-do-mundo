@@ -38,23 +38,23 @@ DIALOGOS_NPCS = {
     ],
     "Capivara Mercadora": [
         "Comprar barato, vender com calma e nunca atravessar pântano sem poção. Essa é a lei da margem.",
-        "Quer um rumor? Pague com atenção, não com moeda. A floresta fala com quem escuta.",
+        "Quer um rumor? Pague com atenção, não com moeda. A floresta fala com quem escuta...",
     ],
     "Camila": [
         "Sou Camila. Onde todo mundo vê mato, eu vejo fibra, abrigo e ferramenta.",
-        "Depois que as formigas luminosas se acalmarem, eu posso ajudar vocês a criar mantos melhores.",
+        "Depois que as formigas luminosas se acalmarem, eu posso ajudar vocês a criar mantos babadeiros.",
     ],
     "Eduardo": [
         "Pegadas contam histórias. Nas ruínas, até o silêncio deixa rastro.",
         "Se uma Pena Sombria aparece duas vezes no mesmo lugar, ela não está perdida. Está guardando algo.",
     ],
     "Monique": [
-        "Eu sou Monique. Às vezes vencer é fechar o casco e aguentar o impacto certo.",
+        "Eu sou Monique. Às vezes vencer requer paciência e se o casco aguenta o impacto certo.",
         "Na caverna, defesa importa tanto quanto ataque. Golem não perdoa descuido.",
     ],
     "Pietra": [
         "Força sem propósito vira ameaça. Força com cuidado vira proteção.",
-        "Quando Henry estiver pronto, a floresta vai reconhecer o passo dele.",
+        "Quando você estiver pronto, a floresta vai reconhecer o seu passo.",
     ],
     "Beatriz": [
         "O-oi... eu sou Beatriz. Eu escuto a correnteza quando ela muda de voz.",

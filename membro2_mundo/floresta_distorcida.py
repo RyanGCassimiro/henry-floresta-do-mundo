@@ -19,7 +19,14 @@ from membro2_mundo.combate import iniciar_combate_contra
 from membro2_mundo.progressao import calcular_status_total, garantir_estado_magias
 from membro3_inventario.inventory import adicionar_item
 from membro2_mundo.dados import aplicar_teste_mobilidade
+from random import choice, randint, random
+from typing import Callable
 
+from membro2_mundo.combate import iniciar_combate_contra
+from membro2_mundo.progressao import calcular_status_total, garantir_estado_magias
+from membro3_inventario.inventory import adicionar_item
+from membro2_mundo.dados import aplicar_teste_mobilidade
+from membro2_mundo.dialogos_henry_mitis import dialogo_perola_furta_cor
 
 TRECHOS_DISTORCIDOS = [
     {
@@ -334,6 +341,9 @@ def _tentar_recompensa_beatriz(estado: dict, criatura: dict, profundidade: int) 
 
     adicionar_item(estado, PEROLA_FURTA_COR.copy())
     estado["floresta_distorcida"]["perola_furta_cor_encontrada"] = True
+
+    dialogo_perola_furta_cor()
+
     print("\nA água distorcida canta baixinho entre as raízes.")
     print("Henry encontrou a Pérola Furta-cor — a Canção das Águas cristalizada.")
     print("Beatriz precisa desse item para proteger os animais aquáticos de água doce.")
