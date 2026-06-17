@@ -21,6 +21,10 @@ from membro2_mundo.quests_personagens import abrir_quests_personagens, garantir_
 from membro2_mundo.dialogos_npcs import abrir_dialogos_local
 from membro2_mundo.sorting import merge_sort_itens
 from membro2_mundo.dados import aplicar_teste_mobilidade
+from membro2_mundo.dialogos_henry_mitis import (
+    dialogo_entrada_local,
+    dialogo_saida_local,
+)
 
 
 from membro3_inventario.inventory import (
@@ -105,9 +109,13 @@ def escolher_local(estado: dict) -> None:
     dificuldade = 8 + max(1, distancia // 4)
     aplicar_teste_mobilidade(estado, origem, destino, dificuldade)
 
+    dialogo_saida_local(origem)
+
     estado["local_atual"] = destino
     print(f"\nHenry e Mitis viajaram de {origem} para {destino}.")
     print(f"Distância percorrida: {distancia}")
+
+    dialogo_entrada_local(destino)
 
 def ordenar_inventario(estado: dict) -> None:
     if not estado["inventario"]:
@@ -120,6 +128,7 @@ def ordenar_inventario(estado: dict) -> None:
     print("3 - Raridade")
     print("4 - Valor mágico")
     print("5 - Preço")
+
     opcoes = {
         "1": "nome",
         "2": "peso",
@@ -127,8 +136,10 @@ def ordenar_inventario(estado: dict) -> None:
         "4": "valor_magico",
         "5": "preco",
     }
+
     escolha = input("Escolha o critério: ").strip()
     chave = opcoes.get(escolha)
+
     if not chave:
         print("Critério inválido.")
         return
