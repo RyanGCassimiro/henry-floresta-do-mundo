@@ -28,7 +28,8 @@ assert rota[0] == MISSAO_PRINCIPAL['local_inicial'] and rota[-1] == MISSAO_PRINC
 assert dist < float('inf')
 
 # Inventário + MergeSort
-adicionar_item(estado, ITENS_POR_LOCAL['Bosque do Ipê'][1].copy())
+capa = next(item for item in ITENS_POR_LOCAL['Bosque do Ipê'] if item['nome'] == 'Capa de Ipê Roxo')
+adicionar_item(estado, capa.copy())
 assert consultar_item(estado, 'Capa de Ipê Roxo') is not None
 ordenado = merge_sort_itens(estado['inventario'], 'valor_magico')
 assert [i['valor_magico'] for i in ordenado] == sorted(i['valor_magico'] for i in ordenado)
@@ -44,7 +45,7 @@ estado['status']['exp'] = 0
 ganhar_exp(estado, 60)
 assert estado['status']['nivel'] >= 2
 estado['habilidades']['fire'] = 2
-assert nome_magia('fire', 2) == 'Firaga'
+assert nome_magia('fire', 2) == 'Fire II'
 
 # Dados
 with patch('membro2_mundo.dados.rolar_d20', return_value=20):
@@ -53,7 +54,17 @@ with patch('membro2_mundo.dados.rolar_d20', return_value=20):
 
 # Coleta com input
 estado['local_atual'] = 'Lago das Capivaras'
-with patch('builtins.input', return_value='1'):
+anel_vitoria = next(item for item in ITENS_POR_LOCAL['Lago das Capivaras'] if item['nome'] == 'Anel de Vitória-régia')
+evento_coleta = {
+    'pista': 'Teste de coleta narrativa.',
+    'pergunta': 'Investigar?',
+    'sucesso': 'Item encontrado no teste.',
+    'falha': 'Falha no teste.',
+    'ignorar': 'Ignorado no teste.',
+}
+with patch('builtins.input', return_value='1'), \
+     patch('membro2_mundo.coleta.choice', side_effect=[evento_coleta, anel_vitoria]), \
+     patch('membro2_mundo.coleta.rolar_d20', return_value=16):
     coletar_item_no_local(estado)
 assert any(i['nome'] == 'Anel de Vitória-régia' for i in estado['inventario'])
 
@@ -61,7 +72,7 @@ assert any(i['nome'] == 'Anel de Vitória-régia' for i in estado['inventario'])
 estado['status']['hp'] = estado['status']['hp_max']
 moedas_antes = estado['moedas']
 inimigo_fraco = {'nome':'Teste Fraco','hp':5,'ataque':1,'defesa':0,'exp':1,'moedas':999,'fraquezas':[],'resistencias':[],'tipo_dano':'fisico'}
-with patch('builtins.input', return_value='15'):
+with patch('builtins.input', return_value='6'):
     venceu = iniciar_combate_contra(estado, inimigo_fraco, contexto='teste')
 assert venceu is False
 assert estado['moedas'] == moedas_antes

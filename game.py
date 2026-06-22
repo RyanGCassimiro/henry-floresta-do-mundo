@@ -50,6 +50,25 @@ from membro3_inventario.save_manager import salvar_jogo, carregar_jogo
 def pausar() -> None:
     input("\nPressione ENTER para continuar...")
 
+def mostrar_cabecalho_estado(estado: dict) -> None:
+    """Mostra um cabeçalho fixo para orientar o jogador."""
+    status = estado.get("status", {})
+    local = estado.get("local_atual", "Local desconhecido")
+    hp = status.get("hp", 0)
+    hp_max = status.get("hp_max", hp)
+    mana = status.get("mana", 0)
+    mana_max = status.get("mana_max", mana)
+    moedas = estado.get("moedas", 0)
+
+    print("\n" + "=" * 60)
+    print("HENRY E A FLORESTA DO MUNDO".center(60))
+    print("=" * 60)
+    print(f"Local atual: {local}")
+    print(f"HP: {hp}/{hp_max} | Mana: {mana}/{mana_max} | Moedas: {moedas}")
+    print("Objetivo: recuperar fragmentos da Árvore do Mundo")
+    print("=" * 60)
+
+
 def titulo() -> None:
     """Exibe a tela inicial do jogo.
 
@@ -59,28 +78,56 @@ def titulo() -> None:
 
 def menu() -> None:
     print("\n=== MENU PRINCIPAL ===")
-    print("1  - Ver missão")
-    print("2  - Ver mapa")
-    print("3  - Calcular melhor rota com TSP")
-    print("4  - Viajar para local")
-    print("5  - Coletar item no local atual")
-    print("6  - Enfrentar criatura do local")
-    print("7  - Loja da Capivara")
-    print("8  - Ver inventário")
-    print("9  - Ordenar inventário com MergeSort")
-    print("10 - Consultar item por número")
-    print("11 - Usar poção/consumível por número")
-    print("12 - Equipar item")
-    print("13 - Remover item")
-    print("14 - Ver status e habilidades")
-    print("15 - Treinar habilidade / ver evolução")
-    print("16 - Salvar jogo")
-    print("17 - Carregar jogo")
-    print("18 - Quests dos aliados")
-    print("19 - Entrar na Floresta Distorcida")
-    print("20 - Conversar com NPCs do local")
-    print("21 - Créditos")
-    print("0  - Sair")
+    print("1 - Explorar")
+    print("2 - Inventário")
+    print("3 - Personagem")
+    print("4 - Missões")
+    print("5 - Sistema")
+    print("0 - Sair")
+def menu_explorar() -> None:
+    print("\n=== EXPLORAR ===")
+    print("1 - Ver mapa")
+    print("2 - Viajar para local")
+    print("3 - Coletar item no local atual")
+    print("4 - Enfrentar criatura do local")
+    print("5 - Conversar com NPCs do local")
+    print("6 - Entrar na Floresta Distorcida")
+    print("7 - Loja da Capivara")
+    print("0 - Voltar")
+
+
+def menu_inventario() -> None:
+    print("\n=== INVENTÁRIO ===")
+    print("1 - Ver inventário")
+    print("2 - Ordenar inventário com MergeSort")
+    print("3 - Consultar item por número")
+    print("4 - Usar poção/consumível por número")
+    print("5 - Equipar item")
+    print("6 - Remover item")
+    print("0 - Voltar")
+
+
+def menu_personagem() -> None:
+    print("\n=== PERSONAGEM ===")
+    print("1 - Ver status e habilidades")
+    print("2 - Treinar habilidade / ver evolução")
+    print("0 - Voltar")
+
+
+def menu_missoes() -> None:
+    print("\n=== MISSÕES ===")
+    print("1 - Ver missão principal")
+    print("2 - Calcular melhor rota com TSP")
+    print("3 - Quests dos aliados")
+    print("0 - Voltar")
+
+
+def menu_sistema() -> None:
+    print("\n=== SISTEMA ===")
+    print("1 - Salvar jogo")
+    print("2 - Carregar jogo")
+    print("3 - Créditos")
+    print("0 - Voltar")
 
 def escolher_local(estado: dict) -> None:
     locais = listar_locais()
@@ -262,84 +309,167 @@ def iniciar_jogo() -> None:
     titulo()
 
     while True:
+        mostrar_cabecalho_estado(estado)
         menu()
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "1":
+            abrir_menu_explorar(estado)
+
+        elif opcao == "2":
+            abrir_menu_inventario(estado)
+
+        elif opcao == "3":
+            abrir_menu_personagem(estado)
+
+        elif opcao == "4":
+            abrir_menu_missoes(estado)
+
+        elif opcao == "5":
+            abrir_menu_sistema(estado)
+
+        elif opcao == "0":
+            print("Até a próxima aventura de Henry e Mitis!")
+            break
+
+        else:
+            print("Opção inválida.")
+            pausar()
+
+
+def abrir_menu_explorar(estado: dict) -> None:
+    while True:
+        mostrar_cabecalho_estado(estado)
+        menu_explorar()
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "1":
+            mostrar_mapa()
+            pausar()
+        elif opcao == "2":
+            escolher_local(estado)
+            pausar()
+        elif opcao == "3":
+            coletar_item_no_local(estado)
+            pausar()
+        elif opcao == "4":
+            iniciar_combate_no_local(estado)
+            pausar()
+        elif opcao == "5":
+            abrir_dialogos_local(estado)
+            pausar()
+        elif opcao == "6":
+            explorar_floresta_distorcida(estado)
+            pausar()
+        elif opcao == "7":
+            abrir_loja_capivara(estado)
+            pausar()
+        elif opcao == "0":
+            return
+        else:
+            print("Opção inválida.")
+            pausar()
+
+
+def abrir_menu_inventario(estado: dict) -> None:
+    while True:
+        mostrar_cabecalho_estado(estado)
+        menu_inventario()
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "1":
+            mostrar_inventario(estado)
+            mostrar_equipamentos(estado)
+            pausar()
+        elif opcao == "2":
+            ordenar_inventario(estado)
+            pausar()
+        elif opcao == "3":
+            consultar_item_por_menu(estado)
+            pausar()
+        elif opcao == "4":
+            usar_consumivel_por_menu(estado)
+            pausar()
+        elif opcao == "5":
+            equipar_item_por_menu(estado)
+            pausar()
+        elif opcao == "6":
+            nome = input("Nome do item para remover: ")
+            remover_item(estado, nome)
+            pausar()
+        elif opcao == "0":
+            return
+        else:
+            print("Opção inválida.")
+            pausar()
+
+
+def abrir_menu_personagem(estado: dict) -> None:
+    while True:
+        mostrar_cabecalho_estado(estado)
+        menu_personagem()
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "1":
+            mostrar_status(estado)
+            pausar()
+        elif opcao == "2":
+            gastar_ponto_habilidade(estado)
+            pausar()
+        elif opcao == "0":
+            return
+        else:
+            print("Opção inválida.")
+            pausar()
+
+
+def abrir_menu_missoes(estado: dict) -> None:
+    while True:
+        mostrar_cabecalho_estado(estado)
+        menu_missoes()
         opcao = input("Escolha uma opção: ").strip()
 
         if opcao == "1":
             mostrar_missao()
             pausar()
         elif opcao == "2":
-            mostrar_mapa()
-            pausar()
-        elif opcao == "3":
             calcular_rota_tsp()
             estado["rota_tsp_calculada"] = True
             pausar()
-        elif opcao == "4":
-            escolher_local(estado)
+        elif opcao == "3":
+            abrir_quests_personagens(estado)
             pausar()
-        elif opcao == "5":
-            coletar_item_no_local(estado)
+        elif opcao == "0":
+            return
+        else:
+            print("Opção inválida.")
             pausar()
-        elif opcao == "6":
-            iniciar_combate_no_local(estado)
-            pausar()
-        elif opcao == "7":
-            abrir_loja_capivara(estado)
-            pausar()
-        elif opcao == "8":
-            mostrar_inventario(estado)
-            mostrar_equipamentos(estado)
-            pausar()
-        elif opcao == "9":
-            ordenar_inventario(estado)
-            pausar()
-        elif opcao == "10":
-            consultar_item_por_menu(estado)
-            pausar()
-        elif opcao == "11":
-            usar_consumivel_por_menu(estado)
-            pausar()
-        elif opcao == "12":
-            equipar_item_por_menu(estado)
-            pausar()
-        elif opcao == "13":
-            nome = input("Nome do item para remover: ")
-            remover_item(estado, nome)
-            pausar()
-        elif opcao == "14":
-            mostrar_status(estado)
-            pausar()
-        elif opcao == "15":
-            gastar_ponto_habilidade(estado)
-            pausar()
-        elif opcao == "16":
+
+
+def abrir_menu_sistema(estado: dict) -> None:
+    while True:
+        mostrar_cabecalho_estado(estado)
+        menu_sistema()
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "1":
             salvar_jogo(estado)
             pausar()
-        elif opcao == "17":
+        elif opcao == "2":
             carregado = carregar_jogo()
             if carregado:
-                estado = carregado
+                estado.clear()
+                estado.update(carregado)
                 garantir_estado_magias(estado)
                 garantir_estado_quests(estado)
                 garantir_estado_dungeon(estado)
                 print("Jogo carregado com sucesso.")
             pausar()
-        elif opcao == "18":
-            abrir_quests_personagens(estado)
-            pausar()
-        elif opcao == "19":
-            explorar_floresta_distorcida(estado)
-            pausar()
-        elif opcao == "20":
-            abrir_dialogos_local(estado)
-            pausar()
-        elif opcao == "21":
+        elif opcao == "3":
             mostrar_creditos()
             pausar()
         elif opcao == "0":
-            print("Até a próxima aventura de Henry e Mitis!")
-            break
+            return
         else:
             print("Opção inválida.")
             pausar()

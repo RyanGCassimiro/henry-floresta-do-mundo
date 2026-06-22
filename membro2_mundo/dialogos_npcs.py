@@ -7,6 +7,8 @@ Este módulo adiciona uma camada de RPG de mesa ao terminal:
 """
 from __future__ import annotations
 
+from random import choice
+
 from membro3_inventario.inventory import adicionar_item, consultar_item, remover_item
 
 
@@ -25,6 +27,7 @@ RUMORES_CAPIVARA = [
     "Santiago conhece atalhos, mas só confia em quem respeita as rotas antigas.",
     "Camila aprendeu a tecer mantos com algodão e seiva clara.",
     "Golems resistem a trovão, mas água e gelo costumam abrir rachaduras na seiva.",
+    "Se a água do lago ficar silenciosa demais, talvez ela esteja ouvindo você.",
 ]
 
 DIALOGOS_NPCS = {
@@ -221,19 +224,42 @@ def conversar_beatriz(estado: dict) -> None:
             print("Opção inválida.")
 
 
+def escutar_rumor_capivara() -> None:
+    print("\nCapivara Mercadora ajeita os itens sobre a banca.")
+    print(f'Capivara: "{choice(RUMORES_CAPIVARA)}"')
+
+
+def conversar_capivara(estado: dict) -> None:
+    while True:
+        print("\n=== CAPIVARA MERCADORA ===")
+        print("A Capivara observa Henry com calma, como se já soubesse o que ele procura.")
+        print("\n1 - Conversar")
+        print("2 - Escutar rumor")
+        print("0 - Voltar")
+
+        escolha = input("Escolha: ").strip()
+
+        if escolha == "1":
+            print('\nCapivara: "Comprar é fácil. Difícil é saber o que levar para sobreviver."')
+        elif escolha == "2":
+            escutar_rumor_capivara()
+        elif escolha == "0":
+            return
+        else:
+            print("Opção inválida.")
+
+
 def _falar_com_npc(estado: dict, npc: str) -> None:
     if npc == "Beatriz":
         conversar_beatriz(estado)
+        return
+    if npc == "Capivara Mercadora":
+        conversar_capivara(estado)
         return
 
     print(f"\n=== {npc.upper()} ===")
     for fala in DIALOGOS_NPCS.get(npc, ["..."]):
         print(f"{npc}: {fala}")
-
-    if npc == "Capivara Mercadora":
-        print("\nRumores disponíveis:")
-        for i, rumor in enumerate(RUMORES_CAPIVARA, start=1):
-            print(f"{i} - {rumor}")
 
     if npc == "Camila":
         print("\n1 - Abrir criação de itens da Camila")
@@ -266,4 +292,3 @@ def abrir_dialogos_local(estado: dict) -> None:
             print("Opção inválida.")
             continue
         _falar_com_npc(estado, npc)
-

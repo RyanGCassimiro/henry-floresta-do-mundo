@@ -137,15 +137,23 @@ def mostrar_hud_batalha(estado: dict, inimigo: dict, ultima_acao: str, turno: in
     hp_max_i = inimigo.get("hp_max", max(1, hp_i))
 
     print("\n" + "=" * 56)
-    print(f"BATALHA — HENRY & MITIS vs {inimigo.get('nome', '???').upper()}")
+    titulo = "BATALHA — HENRY" if estado.get("mitis_separado") else "BATALHA — HENRY & MITIS"
+    print(titulo.center(56))
     if contexto:
         print(f"Local: {contexto} | Turno: {turno}")
     else:
         print(f"Turno: {turno}")
     print("=" * 56)
-    print(f"Henry   HP: {_barra(hp_h, hp_max_h)} {hp_h}/{hp_max_h} | MP: {_barra(mp_h, mp_max_h)} {mp_h}/{mp_max_h}")
-    print(f"Inimigo HP: {_barra(hp_i, hp_max_i)} {hp_i}/{hp_max_i}")
-    print(f"Fraqueza: {_formatar_lista(inimigo.get('fraquezas', []))} | Resistência: {_formatar_lista(inimigo.get('resistencias', []))}")
+    print("GRUPO DO JOGADOR")
+    print(f"Henry   HP: {_barra(hp_h, hp_max_h)} {hp_h}/{hp_max_h}")
+    print(f"Mana    MP: {_barra(mp_h, mp_max_h)} {mp_h}/{mp_max_h}")
+    print("-" * 56)
+    print("INIMIGO")
+    print(inimigo.get("nome", "???"))
+    print(f"HP:     {_barra(hp_i, hp_max_i)} {hp_i}/{hp_max_i}")
+    print(f"ATQ/DEF: {inimigo.get('ataque', 0)} / {inimigo.get('defesa', 0)}")
+    print(f"Fraqueza: {_formatar_lista(inimigo.get('fraquezas', []))}")
+    print(f"Resistência: {_formatar_lista(inimigo.get('resistencias', []))}")
 
     buffs = []
     for chave in ["haste", "protect", "shell", "veneno", "guarana_turnos"]:
@@ -163,11 +171,14 @@ def mostrar_hud_batalha(estado: dict, inimigo: dict, ultima_acao: str, turno: in
     print("-" * 56)
 
 
-def mostrar_menu_batalha() -> str:
+def mostrar_menu_batalha(estado: dict) -> str:
     print("AÇÕES")
     print("1 - Ataque físico de Henry")
     print("2 - Magias de Henry")
-    print("3 - Habilidades do Mitis")
+    if estado.get("mitis_separado"):
+        print("3 - Habilidades do Mitis (indisponível: Mitis está na toca)")
+    else:
+        print("3 - Habilidades do Mitis")
     print("4 - Usar poção/consumível")
     print("5 - Ver status detalhado")
     print("6 - Fugir")
@@ -555,7 +566,7 @@ def iniciar_combate_contra(estado: dict, inimigo_base: dict, contexto: str = "")
 
     while inimigo["hp"] > 0 and estado["status"]["hp"] > 0:
         mostrar_hud_batalha(estado, inimigo, ultima_acao, turno, contexto)
-        escolha = mostrar_menu_batalha()
+        escolha = mostrar_menu_batalha(estado)
 
         turno_valido = True
         habilidade_usada: str | None = None
@@ -574,6 +585,10 @@ def iniciar_combate_contra(estado: dict, inimigo_base: dict, contexto: str = "")
             turno_valido, log_acao = _capturar_saida(_lancar_magia_henry, estado, inimigo, habilidade)
             habilidade_usada = habilidade if turno_valido else None
         elif escolha == "3":
+            if estado.get("mitis_separado"):
+                ultima_acao = "Mitis está dentro da toca e não pode agir neste turno."
+                continue
+
             habilidade = escolher_habilidade_mitis(estado)
             if not habilidade:
                 ultima_acao = "Mitis aguardou a ordem de Henry."
@@ -606,7 +621,10 @@ def iniciar_combate_contra(estado: dict, inimigo_base: dict, contexto: str = "")
             ultima_acao = "Status detalhado consultado."
             continue
         elif escolha == "6":
-            print("Henry e Mitis fugiram do combate.")
+            if estado.get("mitis_separado"):
+                print("Henry fugiu do combate enquanto procurava o caminho de volta para Mitis.")
+            else:
+                print("Henry e Mitis fugiram do combate.")
             estado["ultimo_resultado_combate"] = "fuga"
             return False
         else:
@@ -649,7 +667,10 @@ def iniciar_combate_contra(estado: dict, inimigo_base: dict, contexto: str = "")
         turno += 1
 
     if estado["status"]["hp"] <= 0:
-        print("Henry caiu em combate, mas Mitis o levou de volta para a Vila das Preguiças.")
+        if estado.get("mitis_separado"):
+            print("Henry caiu em combate, mas a Floresta Distorcida o expulsou para a Vila das Preguiças.")
+        else:
+            print("Henry caiu em combate, mas Mitis o levou de volta para a Vila das Preguiças.")
         estado["ultimo_resultado_combate"] = "derrota"
         estado["local_atual"] = "Vila das Preguiças"
         status_total = calcular_status_total(estado)
