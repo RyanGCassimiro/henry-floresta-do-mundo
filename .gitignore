@@ -15,7 +15,10 @@ venv/
 
 # Sistema operacional
 .DS_Store
+__MACOSX/
+Icon?
 
 # Saves e dados locais
 saves/
 *.save
+save.json
